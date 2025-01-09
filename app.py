@@ -204,23 +204,30 @@ model.to(device)
 model.eval()
 
 # Streamlit App
-st.title("CpG Prediction in DNA Sequences")
+st.title("CpG Prediction in DNA Sequences - task part 1")
 st.markdown("""
 This app predicts the number of CpG counts in a given DNA sequence.
 Enter a DNA sequence and compare the actual count with the model's prediction.
+
+example- ACGTCGTATCGATCGAACGT
 """)
 
-# User Input
 sequence = st.text_input("Enter DNA Sequence:", "")
 
 if sequence:
     if all(nuc in "NACGT" for nuc in sequence.upper()):
-        seq_tensor = sequence_to_tensor(sequence).to(device)
-        with torch.no_grad():
-            pred = model(seq_tensor)
-            predicted_count = pred.round().item()
-        actual_count = count_cpg(sequence)
-        difference = abs(predicted_count - actual_count)
+        with st.spinner("Processing..."):
+            # Convert sequence to tensor
+            seq_tensor = sequence_to_tensor(sequence).to(device)
+
+            # Make prediction
+            with torch.no_grad():
+                pred = model(seq_tensor)
+                predicted_count = pred.round().item()
+
+            # Calculate actual count and difference
+            actual_count = count_cpg(sequence)
+            difference = abs(predicted_count - actual_count)
 
         # Display Results
         st.subheader("Results")
@@ -230,4 +237,5 @@ if sequence:
         st.write(f"**Difference:** {difference}")
     else:
         st.error("Invalid DNA sequence. Only characters N, A, C, G, T are allowed.")
+
 
