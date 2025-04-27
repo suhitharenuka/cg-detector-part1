@@ -32,8 +32,4 @@ pip install torch streamlit pyngrok
 python app.py
 ```
 
-3. **Launch the Web App (Optional)**:
-```bash
-streamlit app.py
-```
 
